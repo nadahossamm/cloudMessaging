@@ -13,13 +13,15 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "101";
     private final  String TAG="FirebaseMessagingServic";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

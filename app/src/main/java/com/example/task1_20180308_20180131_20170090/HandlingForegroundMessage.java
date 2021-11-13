@@ -8,12 +8,16 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class HandlingForegroundMessage extends FirebaseMessagingService {
     private static final String CHANNEL_ID = "101";
     private final  String TAG="FirebaseMessagingServic";
+    FirebaseDatabase rootNode;
+    DatabaseReference reference;
 @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage)
     {
@@ -36,11 +40,20 @@ public class HandlingForegroundMessage extends FirebaseMessagingService {
                 // Set the intent that will fire when the user taps the notification
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
+        /*creating an instance of the notifications class*/
+        String notificationTitle = title;
+        String notificationMessage = message;
+        Notifications notification= new Notifications(notificationTitle,notificationMessage);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
+
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(1, builder.build());
+        /*sending the created instance upon sending*/
+        rootNode = FirebaseDatabase.getInstance();
+        reference = rootNode.getReference("Notofications");
+        reference.setValue(notification);
     }
 
 
