@@ -2,18 +2,13 @@ package com.example.task1_20180308_20180131_20170090;
 
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -28,10 +23,7 @@ public class HandlingForegroundMessage extends FirebaseMessagingService {
 
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage)
     {
-        Log.d(TAG, "onMessageReceived from: "+remoteMessage.getNotification().getTitle());
-        Log.d(TAG, "onMessageReceived: "+remoteMessage.getNotification().getBody());
         addtodb(remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody());
-
         showNotification(remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody());
     }
 
@@ -41,7 +33,7 @@ public class HandlingForegroundMessage extends FirebaseMessagingService {
         Map<String, Object> message = new HashMap<>();
         message.put("title", title);
         message.put("body", body);
-         FirebaseDatabase.getInstance().getReference("Notifications").setValue(message);
+        FirebaseDatabase.getInstance().getReference("Notifications").child(message.toString()).setValue(message);
     }
     private void showNotification(String title,String message){
         Intent intent = new Intent(this, MainActivity.class);
