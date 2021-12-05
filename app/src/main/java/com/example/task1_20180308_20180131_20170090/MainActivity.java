@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
                 double pre = (snapshot.getBytesTransferred() / snapshot.getTotalByteCount() )* 100.0;
 
             }
+
+
         });
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
