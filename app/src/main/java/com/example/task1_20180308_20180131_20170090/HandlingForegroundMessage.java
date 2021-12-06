@@ -27,7 +27,7 @@ public class HandlingForegroundMessage extends FirebaseMessagingService {
         showNotification(remoteMessage.getNotification().getTitle(),remoteMessage.getNotification().getBody());
     }
 
-    public void addtodb (String body, String title)
+    public void addtodb (String title, String body)
     {
 
         Map<String, Object> message = new HashMap<>();

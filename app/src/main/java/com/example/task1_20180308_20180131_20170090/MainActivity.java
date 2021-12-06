@@ -17,6 +17,8 @@ import android.view.View;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -24,6 +26,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String CHANNEL_ID = "101";
     private final  String TAG="FirebaseMessagingServic";
     private static final int RC=300;
-  //  DatabaseReference dbref;
+    String imageID;
+     DatabaseReference dbref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -64,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     private void uploadFile(Uri filePath)
     {
         StorageReference root = FirebaseStorage.getInstance().getReference();
+
+        //final StorageReference imageLinkRef = root.child("links/"+filePath)
         final StorageReference imageRef = root.child("Img/"+filePath.getLastPathSegment());
         UploadTask uploadTask = imageRef.putFile(filePath);
         uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -72,13 +79,19 @@ public class MainActivity extends AppCompatActivity {
                 double pre = (snapshot.getBytesTransferred() / snapshot.getTotalByteCount() )* 100.0;
 
             }
+
+
         });
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                 imageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
+                        imageRef imageRef1= new imageRef(task.getResult().toString());
+                        imageID = dbref.push().getKey();
+                        dbref.child(imageID).setValue(imageRef1);
                         Log.e("Download Link",task.getResult().toString());
                     }
                 });
@@ -118,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     private void selectFile()
     {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
+        intent.setType("*/*"); //to select any type of file
         startActivityForResult(intent,RC);
     }
 
